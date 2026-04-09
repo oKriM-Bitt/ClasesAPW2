@@ -2,8 +2,7 @@ import fsp from 'node:fs/promises'
 import path from 'node:path'
 import { guardarUsuarios } from './escritura.mjs'
 import { leerUsuarios } from './leer.mjs'
-
-async function principal() {
+ async function principal() {
     console.log("Iniciando ")
     
     // 1. Llamamos a la función de escritura
