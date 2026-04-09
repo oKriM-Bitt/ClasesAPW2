@@ -1,7 +1,7 @@
 import fsp from 'node:fs/promises'
 import path from 'node:path'
 
-// AGREGÁ ESTA PALABRA CLAVE 'export'
+
 export async function guardarUsuarios() {
     try {
         const pepe = await fetch('https://api.escuelajs.co/api/v1/users')
