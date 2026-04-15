@@ -1,0 +1,22 @@
+### --
+
+# GET - IES
+
+GET https://ies21.edu.ar/carreras
+
+### --
+
+# GET - Api
+
+GET https://api.escuelajs.co/api/v1/users
+
+### --
+
+# GET - Localh
+
+GET http://localhost:3000
+### --
+
+# GET - Localh
+
+GET http://localhost:3000/guardara
