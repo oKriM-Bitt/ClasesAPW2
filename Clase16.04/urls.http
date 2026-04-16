@@ -1,0 +1,17 @@
+
+
+
+### --
+
+# GET - Api
+
+GET https://api.escuelajs.co/api/v1/users
+
+
+
+###
+#GET - LocalH
+
+GET http://localhost:3000
+
+
