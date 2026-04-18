@@ -2,57 +2,77 @@
 
 
 // module httpr
-import fsp from 'node:fs/promises'
-import http from 'node:http'
-import path from 'node:path'
+import fsp from 'node:fs/promises';
+import http from 'node:http';
+import path from 'node:path';
+// data file para guardar los datos de la API externa
+const DATA_FILE = path.join('.', 'apic.json');
 
 const app = http.createServer(async (peticion, respuesta) => {
-    if (peticion.method === 'GET') {
+    const { method, url } = peticion;
 
-        if (peticion.url === '/usuarios') {
+    //  RUTA: /usuarios
 
-            try {
-                const pepe = await fetch('https://api.escuelajs.co/api/v1/users')
-                const productos = await pepe.text()
-                // no necesito filtrar
-                // const productosFiltrados = productos.map(u => ({ id: u.id, name: u.name, email: u.email }))
-                respuesta.statusCode = 200
-                const ruta = path.join('./apic.json')
-                await fsp.writeFile(ruta, productos)
-                       
+    if (method === 'GET' && url === '/usuarios') {
+        try {
+            // Fetch a la API externa y convertir a texto
+            const respuestaFetch = await fetch('https://api.escuelajs.co/api/v1/users');
+            const datosText = await respuestaFetch.text();
 
+            // Guardar en apic.json con el writeFile de fs/promises
+            await fsp.writeFile(DATA_FILE, datosText);
 
+            // Leer el archivo y enviarlo al cliente con el readFile de fs/promises
+            const datosGuardados = await fsp.readFile(DATA_FILE, 'utf-8');
 
+            respuesta.statusCode = 200;
+            respuesta.setHeader('Content-Type', 'application/json; charset=utf-8');
+            return respuesta.end(datosGuardados);
 
-                respuesta.setHeader('content-type', 'application/json')
-
-                console.log("Escritura completada")
-
-                respuesta.end("Escritura completada")
-
-
-
-            } catch (e) {
-                console.log(e)
-
-                respuesta.statusCode = 500
-                respuesta.end('Error en el sv')
-            }
-
+        } catch (error) {
+            console.error(error);
+            respuesta.statusCode = 500;
+              respuesta.end(':V error 500 ');
         }
+
+    //  /usuarios/filtrados
+    // 
+    // && ahorra codigo con esto en vez de hacer dos if separados
+    // es como el operador lógico OR pero para comparar strings
+    } else if (method === 'GET' && url === '/usuarios/filtrados') {
+        try {
+            // Leer el archivo apic.json, convertirlo a objeto y filtrar los usuarios con id < 10
+            const datosGuardados = await fsp.readFile(DATA_FILE, 'utf-8');
+
+            const usuarios = JSON.parse(datosGuardados);
+            // Filtrar usuarios con id < 10
+            const usuariosFiltrados = usuarios.filter(usuario => usuario.id < 10);
+
+            respuesta.statusCode = 200;
+            respuesta.setHeader('Content-Type', 'application/json; charset=utf-8');
+            return respuesta.end(JSON.stringify(usuariosFiltrados));
+
+        } catch (error) {
+            console.error(error);
+            respuesta.statusCode = 500;
+            return respuesta.end(':V error 500 ');
+        }
+
+    //  CUALQUIER OTRA RUTA (El famoso 404)
+    } else {
+        respuesta.statusCode = 404;
+        respuesta.setHeader('Content-Type', 'text/plain; charset=utf-8');
+        respuesta.end(':V error 404 ');
     }
+});
 
 
-    respuesta.statusCode = 404
-    respuesta.end(':V')
-  
-})
+
 
 
 app.listen(3000, () => {
-
-    console.log('servidor corriendo en http://localhost:3000')
-})
+    console.log('Servidor corriendo en http://localhost:3000');
+});
 
 
 
