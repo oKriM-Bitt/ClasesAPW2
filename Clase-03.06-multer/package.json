@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "expres": "^0.0.5",
+    "express": "^5.2.1",
+    "mime-type": "^5.0.3",
+    "multer": "^2.1.1",
+    "nanoid": "^5.1.11"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
+  "name": "clase-03.06-multer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon  index.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
