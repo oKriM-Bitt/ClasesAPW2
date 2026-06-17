@@ -3,6 +3,7 @@ import pool from './conexion.bd.mjs';
 import cookieParser from 'cookie-parser';
 import bcrypt from 'bcryptjs';
 
+
 const PUERTO = 3000;
 
 ////////////////
@@ -11,15 +12,18 @@ const PUERTO = 3000;
 const app = express();
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
+app.use(cookieParser()) // <-- necesario para leer las cookies
 
-app.use('/admin',express.static('./fronts/front-admin'))
+
+
+app.use('/admin', express.static('./fronts/front-admin'))
 
 
 
 app.use('/login',express.static('./fronts/front-login'))
 
 
-// Registrar
+
 // Registrar
 app.post('/registrar', async(req, res) => {
     // 1 - Capturamos los datos
@@ -46,7 +50,7 @@ app.post('/registrar', async(req, res) => {
     VALUES
         ($1, $2)
         RETURNING
-        id, username    
+        id, username
     `, //<--- ojo con la coma
     [
         usuario,
@@ -60,19 +64,28 @@ app.post('/registrar', async(req, res) => {
 }
 res.json({
     mensaje: 'Registro'
-})         
+})
 
 })
 
 
-
-
-
 app.post('/autenticacion', async (req, res) => {
-    //actividad 5
-    // consultar a la bd si el usuario existe
 
-    //generar el id con nanoid      
+
+
+    if(usuario != 'admin' || clave != '123')
+    {
+        return res.redirect('/login')
+
+
+    }
+    res.cookie('sesionId', '',{
+        signed: true,
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: true,
+        maxAge: 1000 * 20
+    })
 })
 
 app.listen(PUERTO, () => {

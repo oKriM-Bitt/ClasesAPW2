@@ -1,7 +1,7 @@
 import {Pool} from 'pg';
 
 const pool = new Pool({
-    host: '192.169.0.98',
+    host: 'localhost',
     user: 'root',
     password: 'pass',
     database: 'admin',
@@ -9,3 +9,8 @@ const pool = new Pool({
 })
 
 export default pool
+
+
+
+
+
